@@ -121,6 +121,39 @@ exports.addDonorDetails = async (req, res) => {
   }
 };
 
+exports.authenticate = (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+
+exports.Login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const donor = await prisma.donor.findUnique({ where: { email } });
+    if (!donor) return res.status(404).json({ message: "Donor not found" });
+
+    const isMatch = await bcrypt.compare(password, donor.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ userId: donor.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    res.status(200).json({ success: true, token, donor });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging in", error: error.message });
+  }
+};
+
+
+
 exports.addFood = async (req, res) => {
   try {
     const { foodType, foodCategory, noOfDishes, preparationDate, expiryDate, address, latitude, longitude, city } = req.body;
