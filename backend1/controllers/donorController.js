@@ -168,7 +168,7 @@ import bcrypt from "bcrypt";
 
 // Register a new donor
 export const register = async (req, res) => {
-  const { username, email, password, phone, address, city, state, pincode } = req.body;
+  const { username, email, password, phone,address, city, state, pincode } = req.body;
   try {
     const existingDonor = await Donor.findOne({ email });
     if (existingDonor) {
