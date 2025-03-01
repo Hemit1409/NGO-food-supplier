@@ -240,3 +240,163 @@ exports.getApprovedNGOs = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error." });
   }
 };
+
+exports.authenticate = (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Authentication failed" });
+  }
+};
+
+exports.Login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const donor = await prisma.donor.findUnique({ where: { email } });
+    if (!donor) {
+      return res.status(400).json({ message: "Donor not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, donor.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign({ userId: donor.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    res.status(200).json({ success: true, token, donor });
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ message: "Login failed" });
+  }
+};
+
+exports.addDonorDetails = async (req, res) => {
+  const { donorId, name, address, city, state, pincode, phone, donorType, photo, restaurantName } = req.body;
+
+  if (!donorId) {
+    return res.status(400).json({ success: false, message: "Donor ID is required" });
+  }
+
+  try {
+    let uploadedPhoto = null;
+
+    if (photo && photo.startsWith("data:image")) {
+      const uploadResponse = await cloudinary.uploader.upload(photo, { folder: "donor_photos", resource_type: "image" });
+      uploadedPhoto = uploadResponse.secure_url;
+    }
+
+    const donor = await prisma.donor.update({
+      where: { id: donorId },
+      data: {
+        name,
+        address,
+        city,
+        state,
+        pincode,
+        phone,
+        donorType,
+        photo: uploadedPhoto || null,
+        restaurantName: donorType === "RESTAURANT" ? restaurantName : null,
+      },
+    });
+
+    res.status(200).json({ success: true, message: "Donor details added successfully", donor });
+  } catch (error) {
+    console.error("Backend Error:", error);
+    res.status(500).json({ success: false, message: "Error adding donor details", error: error.message });
+  }
+};
+
+exports.authenticate = (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+
+exports.Login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const donor = await prisma.donor.findUnique({ where: { email } });
+
+
+    console.log("Stored password:", donor?.password);
+
+    if (!donor) return res.status(404).json({ message: "Donor not found" });
+
+    const isMatch = await bcrypt.compare(password, donor.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ userId: donor.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    res.status(200).json({ success: true, token, donor });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging in", error: error.message });
+  }
+};
+
+
+
+exports.addFood = async (req, res) => {
+  try {
+    const { foodType, foodCategory, noOfDishes, preparationDate, expiryDate, address, latitude, longitude, city } = req.body;
+    const donorId = req.user.userId;
+
+    if (!foodType || !foodCategory || !noOfDishes || !preparationDate || !expiryDate || !address) {
+      return res.status(400).json({ success: false, message: "Please fill all the required fields." });
+    }
+
+    const foodDetails = await prisma.foodDetails.create({
+      data: {
+        donorId,
+        foodType,
+        foodCategory,
+        address,
+        latitude,
+        longitude,
+        city,
+        noOfDishes: parseInt(noOfDishes),
+        preparationDate: new Date(preparationDate),
+        expiryDate: new Date(expiryDate),
+        status: "available",
+      },
+    });
+
+    if (global.io) {
+      global.io.emit("newFoodDonation", { type: "NEW_FOOD_DONATION", foodDetails });
+    }
+
+    res.status(200).json({ success: true, donor });
+  } catch (error) {
+    console.error("Error fetching donor details:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.updateDonorDetails = async (req, res) => {
+  try {
+    const { name, address, phone } = req.body;
+    const donorId = req.user.userId;
+
+    const updatedDonor = await prisma.donor.update({
+      where: { id: donorId },
+      data: { name, address, phone },
+    });
+
+    res.status(200).json({ success: true, updatedDonor });
+  } catch (error) {
+    console.error("Error updating donor details:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
