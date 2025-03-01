@@ -55,7 +55,7 @@ const Sidebar = ({ isMobile, showMobileSidebar, onCloseSidebar }) => {
               <span className="text-white font-bold text-xl">F</span>
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-teal-600 to-teal-400 bg-clip-text text-transparent">
-              FoodSaver
+              Food4Good
             </h1>
           </div>
           {isMobile && (

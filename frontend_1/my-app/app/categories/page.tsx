@@ -61,6 +61,7 @@ export default function CategoriesPage() {
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="categories">Categories</TabsTrigger>
           <TabsTrigger value="map">Map View</TabsTrigger>
+          
         </TabsList>
         <TabsContent value="categories" className="mt-4">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
@@ -83,6 +84,7 @@ export default function CategoriesPage() {
               {/* Map will go here */}
               <div className="grid h-full place-items-center">
                 <p className="text-muted-foreground">Map View Coming Soon</p>
+                
               </div>
             </div>
             <p className="text-sm text-muted-foreground">Find donations near you using our interactive map</p>
