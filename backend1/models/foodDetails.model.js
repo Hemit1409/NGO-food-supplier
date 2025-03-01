@@ -21,8 +21,16 @@ const donationSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["AVAILABLE", "PICKED_UP", "DELIVERED"],
+    enum: ["AVAILABLE", "PICKED_UP", "DELIVERED","REPORTED","DISTRIBUTED"],
     default: "AVAILABLE",
+  },
+  foodVerification:{
+    type : String,
+    enum : ["VERIFIED","NOT VERIFIED"]
+  },
+  expiryDate:{
+    type : Date,
+    required : true
   },
   createdAt: {
     type: Date,
