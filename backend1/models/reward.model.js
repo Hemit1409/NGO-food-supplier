@@ -58,7 +58,7 @@ const UserPointsSchema = new Schema({
   },
 });
 
-const Reward = mongoose.model('Reward', RewardSchema);
+const Reward = mongoose.model('Rewards', RewardSchema);
 const Achievement = mongoose.model('Achievement', AchievementSchema);
 const UserPoints = mongoose.model('UserPoints', UserPointsSchema);
 
