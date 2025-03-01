@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -30,11 +28,11 @@ export default function Signup() {
       role
     }
   
-    console.log("Request Body:", requestBody) // ✅ Log the body before sending
+    console.log("Request Body:", requestBody)
 
     try {
       await signup(email, password, name, role)
-      if(role === "donor"){router.push("/")} else if(role === "ngo"){router.push("/")}
+      // Redirect is handled in the auth context
     } catch (error) {
       console.error("Signup failed:", error)
     }
@@ -65,8 +63,8 @@ export default function Signup() {
               <label className="text-sm font-medium block mb-2">I am a:</label>
               <RadioGroup value={role} onValueChange={(value: "ngo" | "donor") => setRole(value)}>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="Donor" id="donor" />
-                  <Label htmlFor="Donor">Food Supplier</Label>
+                  <RadioGroupItem value="donor" id="donor" />
+                  <Label htmlFor="donor">Food Supplier</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="ngo" id="ngo" />

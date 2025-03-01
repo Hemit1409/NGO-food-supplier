@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -26,14 +24,17 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/contexts/auth-context"
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  userType: "NGO" | "Donor";
-}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function Sidebar({ className, userType }: SidebarProps) {
+export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
-
+  const { user, logout } = useAuth()
+  
+  // Default to donor if no user is found (shouldn't happen in practice)
+  const userType = user?.role || "donor"
+  
   return (
     <div className={cn("pb-12 border-r", className)}>
       <div className="space-y-4 py-4">
@@ -62,7 +63,7 @@ export function Sidebar({ className, userType }: SidebarProps) {
                 Categories
               </Link>
             </Button>
-            {userType === "NGO" && (
+            {userType === "ngo" && (
               <Button
                 variant={pathname === "/tracking" ? "secondary" : "ghost"}
                 size="sm"
@@ -91,7 +92,20 @@ export function Sidebar({ className, userType }: SidebarProps) {
         <div className="px-4 py-2">
           <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">Donations</h2>
           <div className="space-y-1">
-            {userType === "Donor" && (
+            {userType === "ngo" && (
+              <Button
+                variant={pathname === "/donations" ? "secondary" : "ghost"}
+                size="sm"
+                className="w-full justify-start"
+                asChild
+              >
+                <Link href="/donations">
+                  <Heart className="mr-2 h-4 w-4" />
+                  Donations (Food listing)
+                </Link>
+              </Button>
+            )}
+            {userType === "donor" && (
               <Button
                 variant={pathname === "/add-donation" ? "secondary" : "ghost"}
                 size="sm"
@@ -105,28 +119,17 @@ export function Sidebar({ className, userType }: SidebarProps) {
               </Button>
             )}
             <Button
-              variant={pathname === "/my-donations" ? "secondary" : "ghost"}
+              variant={pathname === "/completed-donations" ? "secondary" : "ghost"}
               size="sm"
               className="w-full justify-start"
               asChild
             >
-              <Link href="/donation">
+              <Link href="/completed-donations">
                 <Heart className="mr-2 h-4 w-4" />
                 Completed Donations
               </Link>
             </Button>
-            {/* <Button
-              variant={pathname === "/scheduled" ? "secondary" : "ghost"}
-              size="sm"
-              className="w-full justify-start"
-              asChild
-            >
-              <Link href="/scheduled">
-                <Calendar className="mr-2 h-4 w-4" />
-                Scheduled Donations
-              </Link>
-            </Button> */}
-            {userType === "NGO" && (
+            {userType === "ngo" && (
               <Button
                 variant={pathname === "/donor-details" ? "secondary" : "ghost"}
                 size="sm"
@@ -139,7 +142,7 @@ export function Sidebar({ className, userType }: SidebarProps) {
                 </Link>
               </Button>
             )}
-            {userType === "Donor" && (
+            {userType === "donor" && (
               <Button
                 variant={pathname === "/ngo-details" ? "secondary" : "ghost"}
                 size="sm"
@@ -152,13 +155,24 @@ export function Sidebar({ className, userType }: SidebarProps) {
                 </Link>
               </Button>
             )}
+            <Button
+              variant={pathname === "/scheduled-donations" ? "secondary" : "ghost"}
+              size="sm"
+              className="w-full justify-start"
+              asChild
+            >
+              <Link href="/scheduled-donations">
+                <Calendar className="mr-2 h-4 w-4" />
+                Scheduled Donations
+              </Link>
+            </Button>
           </div>
         </div>
         <div className="px-4 py-2">
           <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">Community</h2>
           <div className="space-y-1">
             <Button
-              variant={pathname === "/waste-analysis" ? "secondary" : "ghost"}
+              variant={pathname === "/waste-analytics" ? "secondary" : "ghost"}
               size="sm"
               className="w-full justify-start"
               asChild
@@ -196,7 +210,7 @@ export function Sidebar({ className, userType }: SidebarProps) {
               </Link>
             </Button>
             <Button
-              variant={pathname === "/help" ? "secondary" : "ghost"}
+              variant={pathname === "/help-support" ? "secondary" : "ghost"}
               size="sm"
               className="w-full justify-start"
               asChild
@@ -210,6 +224,7 @@ export function Sidebar({ className, userType }: SidebarProps) {
               variant="ghost"
               size="sm"
               className="w-full justify-start text-red-500 hover:text-red-500 hover:bg-red-50"
+              onClick={logout}
             >
               <LogOut className="mr-2 h-4 w-4" />
               Logout

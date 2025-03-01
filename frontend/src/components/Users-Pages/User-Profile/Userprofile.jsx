@@ -41,7 +41,7 @@ const DonorProfileEdit = () => {
     const fetchDonorData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/donors/getDonorDetails"
+          "http://localhost:5000/api/donors/getDonorDetails"
         );
         if (response.data.success) {
           setProfile(response.data.donor);
@@ -71,7 +71,7 @@ const DonorProfileEdit = () => {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:3000/api/donors/updateDonorDetails",
+        "http://localhost:5000/api/donors/updateDonorDetails",
         profile
       );
       if (response.data.success) {

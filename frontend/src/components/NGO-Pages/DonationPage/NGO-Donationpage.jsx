@@ -74,7 +74,7 @@ const DonationGrid = () => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        "http://localhost:3000/api/ngo/getAvailableFood",
+        "http://localhost:5000/api/ngo/getAvailableFood",
         {
           withCredentials: true,
         }
@@ -95,7 +95,7 @@ const DonationGrid = () => {
   const handleAccept = async (id) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/ngo/acceptFood",
+        "http://localhost:5000/api/ngo/acceptFood",
         { foodId: id },
         {
           headers: {

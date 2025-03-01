@@ -18,7 +18,7 @@ export default function Login() {
     e.preventDefault()
     try {
       await login(email, password)
-      router.push("/dashboard")
+      // The redirect will happen in the auth context
     } catch (error) {
       console.error("Login failed:", error)
     }

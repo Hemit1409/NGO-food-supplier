@@ -19,7 +19,7 @@ const ContactUs = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/ct/ContactUs",
+        "http://localhost:5000/api/ct/ContactUs",
         formData
       );
 

@@ -85,7 +85,7 @@ const NGOAuthentication = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/ngo/submit",
+        "http://localhost:5000/api/ngo/submit",
         formDataToSend,
         {
           headers: {
