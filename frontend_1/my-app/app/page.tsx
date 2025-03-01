@@ -127,7 +127,7 @@ export default function HomePage() {
         </Button>
       </div>
 
-      <div>
+      {/* <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-xl font-bold">Categories</h2>
           <Link href="/categories" className="text-sm text-primary">
@@ -151,6 +151,14 @@ export default function HomePage() {
           </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
+      </div>  */}
+
+      {/* Welcoming Section */}
+      <div className="rounded-lg bg-primary/10 p-6 text-center">
+        <h2 className="text-2xl font-bold text-primary">Welcome to Our Food Donation Platform!</h2>
+        <p className="mt-2 text-muted-foreground">
+          Discover and contribute to food donations, helping those in need. Let's make a difference together.
+        </p>
       </div>
 
       <Tabs defaultValue="nearby">
@@ -285,7 +293,11 @@ export default function HomePage() {
           <Link href="/rewards">Learn More</Link>
         </Button>
       </div>
+
+      {/* Footer Bar */}
+      <footer className="mt-6 bg-primary text-white p-4 text-center">
+        <p>&copy; {new Date().getFullYear()} NGO Food Supplier. All rights reserved.</p>
+      </footer>
     </div>
   )
 }
-

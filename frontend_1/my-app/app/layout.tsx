@@ -33,7 +33,7 @@ export default function RootLayout({
           </header>
           <div className="flex flex-1">
             <aside className="hidden w-64 shrink-0 md:block">
-              <Sidebar className="h-full" />
+              <Sidebar className="h-full" userType="NGO" />
             </aside>
             <main className="flex-1">{children}</main>
           </div>

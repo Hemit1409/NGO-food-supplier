@@ -7,7 +7,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     <div className="flex items-center space-x-4 lg:space-x-6">
       <Link href="/" className="flex items-center space-x-2 font-bold text-xl">
         <Heart className="h-6 w-6 text-primary" />
-        <span>Left2Right</span>
+        <span>Food4Good</span>
       </Link>
     </div>
   )
