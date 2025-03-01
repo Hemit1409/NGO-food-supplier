@@ -16,7 +16,7 @@ export default function Signup() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [role, setRole] = useState<"ngo" | "supplier">("supplier")
+  const [role, setRole] = useState<"ngo" | "donor">("donor")
   const router = useRouter()
   const { signup } = useAuth()
 
@@ -53,10 +53,10 @@ export default function Signup() {
             </div>
             <div>
               <label className="text-sm font-medium block mb-2">I am a:</label>
-              <RadioGroup value={role} onValueChange={(value: "ngo" | "supplier") => setRole(value)}>
+              <RadioGroup value={role} onValueChange={(value: "ngo" | "donor") => setRole(value)}>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="supplier" id="supplier" />
-                  <Label htmlFor="supplier">Food Supplier</Label>
+                  <RadioGroupItem value="donor" id="donor" />
+                  <Label htmlFor="donor">Food Supplier</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="ngo" id="ngo" />
