@@ -115,7 +115,7 @@ export function Sidebar({ className, userType }: SidebarProps) {
                 Completed Donations
               </Link>
             </Button>
-            <Button
+            {/* <Button
               variant={pathname === "/scheduled" ? "secondary" : "ghost"}
               size="sm"
               className="w-full justify-start"
@@ -125,7 +125,7 @@ export function Sidebar({ className, userType }: SidebarProps) {
                 <Calendar className="mr-2 h-4 w-4" />
                 Scheduled Donations
               </Link>
-            </Button>
+            </Button> */}
             {userType === "NGO" && (
               <Button
                 variant={pathname === "/donor-details" ? "secondary" : "ghost"}
@@ -163,9 +163,9 @@ export function Sidebar({ className, userType }: SidebarProps) {
               className="w-full justify-start"
               asChild
             >
-              <Link href="/waste-analysis">
+              <Link href="/waste-analytics">
                 <Store className="mr-2 h-4 w-4" />
-                Waste Analysis
+                Waste Analytics
               </Link>
             </Button>
             <Button
@@ -201,7 +201,7 @@ export function Sidebar({ className, userType }: SidebarProps) {
               className="w-full justify-start"
               asChild
             >
-              <Link href="/help">
+              <Link href="/help-support">
                 <HelpCircle className="mr-2 h-4 w-4" />
                 Help & Support
               </Link>
