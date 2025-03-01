@@ -47,28 +47,28 @@ export default function Signup() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-4rem)]">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Create an Account</CardTitle>
-          <CardDescription>Join our food sharing community</CardDescription>
+    <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-4rem)] bg-green-50">
+      <Card className="w-full max-w-md shadow-lg border border-green-200">
+        <CardHeader className="bg-green-100 p-4 rounded-t-lg">
+          <CardTitle className="text-green-800">Create an Account</CardTitle>
+          <CardDescription className="text-green-600">Join our food sharing community</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Name</label>
-              <Input type="text" value={username} onChange={(e) => setName(e.target.value)} required />
+              <label className="text-sm font-medium text-green-700">Name</label>
+              <Input type="text" value={username} onChange={(e) => setName(e.target.value)} required className="mt-1 p-2 border border-green-300 rounded-md focus:border-green-500 focus:ring-green-500" />
             </div>
             <div>
-              <label className="text-sm font-medium">Email</label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <label className="text-sm font-medium text-green-700">Email</label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="mt-1 p-2 border border-green-300 rounded-md focus:border-green-500 focus:ring-green-500" />
             </div>
             <div>
-              <label className="text-sm font-medium">Password</label>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <label className="text-sm font-medium text-green-700">Password</label>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="mt-1 p-2 border border-green-300 rounded-md focus:border-green-500 focus:ring-green-500" />
             </div>
             <div>
-              <label className="text-sm font-medium block mb-2">I am a:</label>
+              <label className="text-sm font-medium block mb-2 text-green-700">I am a:</label>
               <RadioGroup value={role} onValueChange={(value: "ngo" | "donor") => setRole(value)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="donor" id="donor" />
@@ -80,13 +80,13 @@ export default function Signup() {
                 </div>
               </RadioGroup>
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-green-600 text-white hover:bg-green-700">
               Sign Up
             </Button>
           </form>
-          <p className="text-center mt-4">
+          <p className="text-center mt-4 text-green-700">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline">
+            <Link href="/login" className="text-green-600 hover:underline">
               Login
             </Link>
           </p>
