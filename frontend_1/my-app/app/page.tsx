@@ -9,7 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+import WelcomeModal from "@/app/welcomeModal"
 export default function HomePage() {
   // Mock data for demonstration
   const featuredDonations = [
@@ -102,6 +102,7 @@ export default function HomePage() {
 
   return (
     <div className="flex-1 space-y-6 p-6">
+      <WelcomeModal />
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <div className="flex items-center gap-2">
@@ -159,9 +160,9 @@ export default function HomePage() {
 
       {/* Welcoming Section */}
       <div className="rounded-lg bg-primary/10 p-6 text-center">
-        <h2 className="text-2xl font-bold text-primary">Welcome to Our Food Donation Platform!</h2>
+        <h2 className="text-2xl font-bold text-primary">Welcome to Food4Good : Food Donation Platform!</h2>
         <p className="mt-2 text-muted-foreground">
-          Discover and contribute to food donations, helping those in need. Let's make a difference together.
+          Discover and contribute to food donations, helping those in need. Let's make a difference together :)
         </p>
       </div>
 
