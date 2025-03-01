@@ -1,22 +1,35 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Import router for navigation
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 export default function WelcomeModal() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsOpen(false), 7000);
-    return () => clearTimeout(timer);
+    // Check if modal has been shown before
+    const hasSeenModal = localStorage.getItem("hasSeenWelcomeModal");
+
+    // Show modal only if it hasn't been shown
+    if (!hasSeenModal) {
+      setIsOpen(true);
+      localStorage.setItem("hasSeenWelcomeModal", "true"); // Store in localStorage
+    }
   }, []);
+
+  const handleGetStarted = () => {
+    setIsOpen(false);
+    router.push("/sign-in"); // Redirect to sign-in page
+  };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -41,7 +54,7 @@ export default function WelcomeModal() {
             </p>
             <p className="mt-2 text-gray-500 italic">Together, every meal counts.</p>
             <div className="mt-6">
-              <Link href="/signup"><Button variant="default" className="px-6 py-3 text-lg" onClick={() => setIsOpen(false)}>
+              <Link href="/signup"><Button variant="default" className="px-6 py-3 text-lg" onClick={handleGetStarted}>
                 Get Started 🚀
               </Button></Link>
             </div>
