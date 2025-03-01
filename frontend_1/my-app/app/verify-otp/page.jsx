@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Building, Check } from "lucide-react";
+import { Building } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -70,6 +70,7 @@ const OTPVerify = () => {
 
   const resendOTP = () => {
     setOtp(Array(6).fill(""));
+    setTimer(60); // Reset the timer
   };
 
   return (
@@ -102,36 +103,19 @@ const OTPVerify = () => {
               ))}
             </div>
 
-            <div className="text-center">
-              {timer > 0 ? (
-                <p className="text-gray-600">
-                  Resend code in <span className="font-bold">15 min</span>
-                </p>
-              ) : (
-                <button
-                  type="button"
-                  onClick={resendOTP}
-                  className="text-[#8beb7f] hover:text-[#78d86e]"
-                >
-                  Resend OTP
-                </button>
-              )}
-            </div>
-
             <button
               type="submit"
               disabled={otp.includes("") || isSubmitting}
-              onClick={isSubmitting}
-              className={`w-full py-3 rounded-xl transition-all duration-300 transform ${
+              className={`w-full py-3 rounded-xl transition-all duration-300 transform border-2 ${
                 !otp.includes("") && !isSubmitting
-                  ? "bg-[#8beb7f] hover:bg-[#78d86e] hover:scale-[1.02] hover:shadow-lg"
-                  : "bg-gray-300 cursor-not-allowed"
-              } text-white font-medium`}
+                  ? "border-light-green-500 text-light-green-500 hover:bg-light-green-100 hover:scale-[1.02] hover:shadow-lg"
+                  : "border-gray-300 text-gray-300 cursor-not-allowed"
+              } font-medium`}
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    className="animate-spin -ml-1 mr-3 h-5 w-5"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -156,6 +140,22 @@ const OTPVerify = () => {
                 "Verify OTP"
               )}
             </button>
+
+            <div className="text-center">
+              {timer > 0 ? (
+                <p className="text-gray-600">
+                  Resend code in <span className="font-bold">{timer} seconds</span>
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={resendOTP}
+                  className="text-[#8beb7f] hover:text-[#78d86e]"
+                >
+                  Resend OTP
+                </button>
+              )}
+            </div>
           </form>
         </div>
       </div>
