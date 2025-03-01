@@ -57,7 +57,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       <div className="flex flex-col h-screen w-64 bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-lg">
         <div className="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-emerald-800 to-green-500">
           <span className="text-xl font-bold text-white tracking-wide">
-            FoodShare
+            Food4Good
           </span>
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}

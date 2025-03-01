@@ -44,7 +44,7 @@ export default function HelpSupport() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const mailtoLink = `mailto:abc@gmail.com?subject=Help%20Request&body=Email:%20${encodeURIComponent(
+    const mailtoLink = `mailto:food4goodhackathon@gmail.com?subject=Help%20Request&body=Email:%20${encodeURIComponent(
       userEmail
     )}%0D%0AQuestion:%20${encodeURIComponent(userQuestion)}`
     window.location.href = mailtoLink
