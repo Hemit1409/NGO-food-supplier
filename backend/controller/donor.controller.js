@@ -163,17 +163,18 @@ exports.authenticate = (req, res, next) => {
 exports.Login = async (req, res) => {
   const { email, password } = req.body;
   try {
+    console.log("hi");
     const donor = await prisma.donor.findUnique({ where: { email } });
 
 
-    console.log("Stored password:", donor?.password);
+    console.log("Stored password:", donor.password);
 
     if (!donor) return res.status(404).json({ message: "Donor not found" });
 
     const isMatch = await bcrypt.compare(password, donor.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ userId: donor.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ userId: donor.id.toString() }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
     res.status(200).json({ success: true, token, donor });
   } catch (error) {
