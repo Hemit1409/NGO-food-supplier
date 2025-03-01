@@ -8,7 +8,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import donorRoutes from "./routes/donorRoutes.js";
 import ngoRoutes from "./routes/ngoRoutes.js";
-// import foodDonationRoutes from "./routes/foodDonationRoutes.js"
+import foodDonationRoutes from "./routes/foodDonationRoutes.js"
+
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -23,6 +24,6 @@ mongoose.connect(process.env.MONGO)
 
 app.use("/api/donor", donorRoutes);
 app.use("/api/ngo", ngoRoutes);
-
+app.use("/",foodDonationRoutes)
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

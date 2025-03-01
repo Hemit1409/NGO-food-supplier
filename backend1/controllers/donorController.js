@@ -80,7 +80,11 @@ export const register = async (req, res) => {
     await transporter.sendMail({
       to: email,
       subject: "Your OTP Code",
+<<<<<<< HEAD
       text: `Your OTP code is ${otp}. It is valid for 15 minutes.`,
+=======
+      text: "Your OTP code is ${otp}. It is valid for 15 minutes.",
+>>>>>>> 7898d2c92138fd4e2a6ab453d1744a0da87c53e1
     });
 
     res.status(201).json({ message: "OTP sent to your email" });
@@ -120,8 +124,13 @@ export const verifyOTP = async (req, res) => {
   try {
     // Find the donor by email
     const donor = await Donor.findOne({ email });
+<<<<<<< HEAD
     console.log(donor.otp);
     if (!donor || donor.otp !== otp ){//|| new Date() > donor.otpExpiry) {
+=======
+
+    if (!donor || donor.otp !== otp || new Date() > donor.otpExpiry) {
+>>>>>>> 7898d2c92138fd4e2a6ab453d1744a0da87c53e1
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 

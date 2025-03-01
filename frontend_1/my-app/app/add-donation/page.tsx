@@ -1,17 +1,93 @@
-import { ImagePlus, MapPin, Upload } from "lucide-react"
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Textarea } from "@/components/ui/textarea"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { ImagePlus, MapPin, Upload } from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+
+interface DonationData {
+  title: string;
+  category: string;
+  description: string;
+  quantity: string;
+  bestBeforeDate: string;
+  bestBeforeTime: string;
+  suitableFor: string[];
+  allergens: string;
+  pickupLocation: string;
+  pickupAvailability: string;
+  availableUntilDate: string;
+  availableUntilTime: string;
+  additionalNotes: string;
+  whoCanRequest: string;
+  shareSocial: boolean;
+}
 
 export default function AddDonationPage() {
+  const [donationData, setDonationData] = useState<DonationData>({
+    title: "",
+    category: "",
+    description: "",
+    quantity: "",
+    bestBeforeDate: "",
+    bestBeforeTime: "",
+    suitableFor: [],
+    allergens: "",
+    pickupLocation: "",
+    pickupAvailability: "flexible",
+    availableUntilDate: "",
+    availableUntilTime: "",
+    additionalNotes: "",
+    whoCanRequest: "anyone",
+    shareSocial: false,
+  });
+
+  useEffect(() => {
+    // Fetch data from the backend
+    axios.get("/api/donations/1") // Replace with the actual donation ID or endpoint
+      .then(response => {
+        setDonationData(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching donation data:", error);
+      });
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setDonationData({ ...donationData, [id]: value });
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, checked } = e.target;
+    setDonationData({ ...donationData, [id]: checked });
+  };
+
+  const handleCheckboxButtonChange = (event: React.FormEvent<HTMLButtonElement>) => {
+    const target = event.target as HTMLInputElement;
+    const { id, checked } = target;
+    setDonationData({ ...donationData, [id]: checked });
+  };
+
+  const handleSelectChange = (id: string, value: string) => {
+    setDonationData({ ...donationData, [id]: value });
+  };
+
+  const handleSubmit = () => {
+    // Implement form submission logic here
+    console.log("Form submitted with data:", donationData);
+  };
+
   return (
     <div className="flex-1 space-y-6 p-6">
       <div className="flex items-center justify-between">
@@ -41,11 +117,11 @@ export default function AddDonationPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
-                <Input id="title" placeholder="e.g., Fresh Vegetables Assortment" />
+                <Input id="title" value={donationData.title} onChange={handleInputChange} placeholder="e.g., Fresh Vegetables Assortment" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
-                <Select>
+                <Select value={donationData.category} onValueChange={(value) => handleSelectChange("category", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
@@ -63,25 +139,27 @@ export default function AddDonationPage() {
                 <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
+                  value={donationData.description}
+                  onChange={handleInputChange}
                   placeholder="Describe the food items, quantity, and any other relevant details"
                   className="min-h-[120px]"
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="quantity">Quantity</Label>
-                <Input id="quantity" placeholder="e.g., 5-6 servings, 2kg, etc." />
+                <Input id="quantity" value={donationData.quantity} onChange={handleInputChange} placeholder="e.g., 5-6 servings, 2kg, etc." />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="best-before">Best Before</Label>
                 <div className="grid grid-cols-2 gap-2">
-                  <Input id="best-before-date" type="date" />
-                  <Input id="best-before-time" type="time" />
+                  <Input id="bestBeforeDate" type="date" value={donationData.bestBeforeDate} onChange={handleInputChange} />
+                  <Input id="bestBeforeTime" type="time" value={donationData.bestBeforeTime} onChange={handleInputChange} />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle>Dietary Information</CardTitle>
               <CardDescription>Help recipients with dietary restrictions</CardDescription>
@@ -91,37 +169,37 @@ export default function AddDonationPage() {
                 <Label>Suitable for</Label>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="vegetarian" />
+                    <Checkbox id="vegetarian" checked={donationData.suitableFor.includes("vegetarian")} onChange={handleCheckboxButtonChange} />
                     <label htmlFor="vegetarian" className="text-sm">
                       Vegetarian
                     </label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="vegan" />
+                    <Checkbox id="vegan" checked={donationData.suitableFor.includes("vegan")} onChange={handleCheckboxButtonChange} />
                     <label htmlFor="vegan" className="text-sm">
                       Vegan
                     </label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="gluten-free" />
+                    <Checkbox id="gluten-free" checked={donationData.suitableFor.includes("gluten-free")} onChange={handleCheckboxButtonChange} />
                     <label htmlFor="gluten-free" className="text-sm">
                       Gluten-Free
                     </label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="dairy-free" />
+                    <Checkbox id="dairy-free" checked={donationData.suitableFor.includes("dairy-free")} onChange={handleCheckboxButtonChange} />
                     <label htmlFor="dairy-free" className="text-sm">
                       Dairy-Free
                     </label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="nut-free" />
+                    <Checkbox id="nut-free" checked={donationData.suitableFor.includes("nut-free")} onChange={handleCheckboxButtonChange} />
                     <label htmlFor="nut-free" className="text-sm">
                       Nut-Free
                     </label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="halal" />
+                    <Checkbox id="halal" checked={donationData.suitableFor.includes("halal")} onChange={handleCheckboxButtonChange} />
                     <label htmlFor="halal" className="text-sm">
                       Halal
                     </label>
@@ -130,10 +208,10 @@ export default function AddDonationPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="allergens">Allergens</Label>
-                <Input id="allergens" placeholder="e.g., contains nuts, dairy, etc." />
+                <Input id="allergens" value={donationData.allergens} onChange={handleInputChange} placeholder="e.g., contains nuts, dairy, etc." />
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
         <div className="space-y-6">
@@ -150,7 +228,7 @@ export default function AddDonationPage() {
                   <p className="text-xs text-muted-foreground">JPG, PNG or GIF, up to 5MB</p>
                   <Input type="file" className="hidden" />
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                {/* <div className="grid grid-cols-3 gap-2">
                   <div className="relative aspect-square rounded-lg bg-muted">
                     <img
                       src="/placeholder.svg?height=100&width=100"
@@ -162,7 +240,7 @@ export default function AddDonationPage() {
                       <span aria-hidden="true">×</span>
                     </Button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </CardContent>
           </Card>
@@ -177,16 +255,16 @@ export default function AddDonationPage() {
                 <Label>Pickup Location</Label>
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">123 Main Street, City Center</span>
+                  <span className="text-sm">{donationData.pickupLocation}</span>
                 </div>
                 <Button variant="outline" size="sm" className="mt-1">
                   Change Location
                 </Button>
               </div>
               <Separator />
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label>Pickup Availability</Label>
-                <RadioGroup defaultValue="flexible">
+                <RadioGroup value={donationData.pickupAvailability} onValueChange={(value) => handleSelectChange("pickupAvailability", value)}>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="flexible" id="flexible" />
                     <Label htmlFor="flexible" className="font-normal">
@@ -200,57 +278,24 @@ export default function AddDonationPage() {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <Label>Available Until</Label>
                 <div className="grid grid-cols-2 gap-2">
-                  <Input type="date" />
-                  <Input type="time" />
+                  <Input id="availableUntilDate" type="date" value={donationData.availableUntilDate} onChange={handleInputChange} />
+                  <Input id="availableUntilTime" type="time" value={donationData.availableUntilTime} onChange={handleInputChange} />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="notes">Additional Notes</Label>
-                <Textarea id="notes" placeholder="Any special instructions for pickup" className="min-h-[80px]" />
+                <Textarea id="notes" value={donationData.additionalNotes} onChange={handleInputChange} placeholder="Any special instructions for pickup" className="min-h-[80px]" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Donation Preferences</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Who can request this donation?</Label>
-                <Select defaultValue="anyone">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="anyone">Anyone</SelectItem>
-                    <SelectItem value="verified">Verified Users Only</SelectItem>
-                    <SelectItem value="organizations">Organizations Only</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="share-social" />
-                <label htmlFor="share-social" className="text-sm">
-                  Share on social media after posting
-                </label>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-between border-t px-6 py-4">
-              <Button variant="outline">Save as Draft</Button>
-              <Button>
-                <Upload className="mr-2 h-4 w-4" />
-                Publish Donation
-              </Button>
-            </CardFooter>
-          </Card>
+          
         </div>
       </div>
     </div>
-  )
+  );
 }
-
