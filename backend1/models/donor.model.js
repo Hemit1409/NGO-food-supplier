@@ -42,7 +42,29 @@ const donorSchema = new Schema({
     type: String,
     required: true,
   },
-  mobileNumber: {
+  otp:{
+    type : String,
+  },
+  isVerified:{
+    type:Boolean,
+    default:false
+  },
+  address:{
+    type : String,
+  },
+  city:{
+    type : String,
+  },
+  state:{
+    type : String
+  },
+  pincode:{
+      type : String
+  },
+  // otpExpiry:{
+  //   type : timestamps
+  // },
+  phone: {
     type: String,
     required: true,
   }
