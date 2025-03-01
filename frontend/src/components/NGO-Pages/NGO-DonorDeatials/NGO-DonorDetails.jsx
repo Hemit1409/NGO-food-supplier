@@ -101,7 +101,7 @@ const NGODonorDetails = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          "http://localhost:5000/api/ngo/getDonorsForNGO",
+          "http://localhost:3001/api/ngo/getDonorsForNGO",
           {
             withCredentials: true,
           }

@@ -37,7 +37,7 @@ const AdminDonor = () => {
     const fetchDonors = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/admin/alldonor",
+          "http://localhost:3001/admin/alldonor",
           {
             withCredential: true,
           }

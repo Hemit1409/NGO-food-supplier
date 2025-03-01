@@ -50,7 +50,7 @@ const EditableNGOProfile = () => {
     const fetchNGOData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/ngo/getngoDetails",
+          "http://localhost:3001/api/ngo/getngoDetails",
           {
             withCredentials: true,
           }
@@ -79,7 +79,7 @@ const EditableNGOProfile = () => {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/ngo/updatengoDetails",
+        "http://localhost:3001/api/ngo/updatengoDetails",
         editedProfile,
         {
           headers: {

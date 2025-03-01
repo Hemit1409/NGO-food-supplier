@@ -25,7 +25,7 @@ const UserDonationHistory = () => {
     const fetchDonations = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/donors/getDonorFood",
+          "http://localhost:3001/api/donors/getDonorFood",
           {
             headers: {
               "Content-Type": "application/json",

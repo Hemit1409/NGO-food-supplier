@@ -23,5 +23,5 @@ mongoose.connect(process.env.MONGO)
 app.use("/api/donor", donorRoutes);
 app.use("/api/ngo", ngoRoutes);
 
-const PORT = 5000;
+const PORT = 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

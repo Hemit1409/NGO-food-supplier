@@ -69,7 +69,7 @@ const NGODetailsPage = () => {
 
   const fetchNGOs = async () => {
     try {
-      const response = await fetch("http://localhost:5000/admin/allngo", {
+      const response = await fetch("http://localhost:3001/admin/allngo", {
         withCredentials: true,
       });
       const data = await response.json();
@@ -91,7 +91,7 @@ const NGODetailsPage = () => {
     setIsSubmitting(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/admin/approve-ngo/${ngoId}`,
+        `http://localhost:3001/admin/approve-ngo/${ngoId}`,
         {
           method: "POST",
           headers: {
@@ -131,7 +131,7 @@ const NGODetailsPage = () => {
     setIsSubmitting(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/admin/reject-ngo/${ngoId}`,
+        `http://localhost:3001/admin/reject-ngo/${ngoId}`,
         {
           method: "POST",
           headers: {

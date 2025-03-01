@@ -39,7 +39,7 @@ const OTPVerify = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/donors/verify-otp",
+        "http://localhost:3001/api/donors/verify-otp",
         {
           email: localStorage.getItem("email"),
           otp: otp.join(""),
