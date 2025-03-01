@@ -14,13 +14,38 @@ cloudinary.config({
 
 const prisma = new PrismaClient();
 
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.EMAIL,
+//     pass: process.env.PASSWORD,
+//   },
+// });
+
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD,
+    user: "food4goodhackathon@gmail.com",
+    pass: "yjdp nexb mtkf rbto",
   },
 });
+
+async function sendEmail(to, subject, text) {
+  try {
+    let info = await transporter.sendMail({
+      from: "food4goodhackathon@gmail.com",
+      to,
+      subject,
+      text,
+    });
+
+    console.log("Email sent: ", info.messageId);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+}
 
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -139,6 +164,10 @@ exports.Login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const donor = await prisma.donor.findUnique({ where: { email } });
+
+
+    console.log("Stored password:", donor?.password);
+
     if (!donor) return res.status(404).json({ message: "Donor not found" });
 
     const isMatch = await bcrypt.compare(password, donor.password);
