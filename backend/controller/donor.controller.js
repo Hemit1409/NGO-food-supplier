@@ -1,18 +1,18 @@
-// const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
-// const nodemailer = require("nodemailer");
-// const { PrismaClient } = require("@prisma/client");
-// require("dotenv").config();
-// const cloudinary = require("cloudinary").v2;
-// const { socketConfig } = require("../config/Socket");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const { PrismaClient } = require("@prisma/client");
+require("dotenv").config();
+const cloudinary = require("cloudinary").v2;
+const { socketConfig } = require("../config/Socket");
 
-// cloudinary.config({
-//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET,
-// });
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 // const transporter = nodemailer.createTransport({
 //   service: "gmail",
@@ -22,162 +22,225 @@
 //   },
 // });
 
-// const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "food4goodhackathon@gmail.com",
+    pass: "yjdp nexb mtkf rbto",
+  },
+});
 
-// exports.registerDonor = async (req, res) => {
-//   const { name, email, password } = req.body;
+async function sendEmail(to, subject, text) {
+  try {
+    let info = await transporter.sendMail({
+      from: "food4goodhackathon@gmail.com",
+      to,
+      subject,
+      text,
+    });
 
-//   if (!name || !email || !password) {
-//     return res.status(400).json({ message: "Email and password are required" });
-//   }
+    console.log("Email sent: ", info.messageId);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+}
 
-//   try {
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const donor = await prisma.donor.create({
-//       data: {
-//         name,
-//         email,
-//         password: hashedPassword,
-//         isVerified: false,
-//       },
-//     });
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
-//     const otp = generateOTP();
-//     const otpExpiry = new Date(Date.now() + 15 * 60 * 1000);
-//     await prisma.donor.update({
-//       where: { id: donor.id },
-//       data: { otp, otpExpiry },
-//     });
+exports.registerDonor = async (req, res) => {
+  const { name, email, password } = req.body;
 
-//     await transporter.sendMail({
-//       to: email,
-//       subject: "Your OTP Code",
-//       text: `Your OTP code is ${otp}. It is valid for 15 minutes.`,
-//     });
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
 
-//     res.status(200).json({ message: "OTP sent to your email" });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ message: "Error registering donor", error: error.message });
-//   }
-// };
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const donor = await prisma.donor.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        isVerified: false,
+      },
+    });
 
-// exports.verifyOTP = async (req, res) => {
-//   const { email, otp } = req.body;
+    const otp = generateOTP();
+    const otpExpiry = new Date(Date.now() + 15 * 60 * 1000);
+    await prisma.donor.update({
+      where: { id: donor.id },
+      data: { otp, otpExpiry },
+    });
 
-//   try {
-//     const donor = await prisma.donor.findUnique({ where: { email } });
+    await transporter.sendMail({
+      to: email,
+      subject: "Your OTP Code",
+      text: `Your OTP code is ${otp}. It is valid for 15 minutes.`,
+    });
 
-//     if (!donor || donor.otp !== otp || new Date() > donor.otpExpiry) {
-//       return res.status(400).json({ message: "Invalid or expired OTP" });
-//     }
+    res.status(200).json({ message: "OTP sent to your email" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error registering donor", error: error.message });
+  }
+};
 
-//     await prisma.donor.update({
-//       where: { email },
-//       data: { isVerified: true, otp: null, otpExpiry: null },
-//     });
+exports.verifyOTP = async (req, res) => {
+  const { email, otp } = req.body;
 
-//     res.status(200).json({ success: true, message: "OTP verified", donor });
-//   } catch (error) {
-//     console.error("Error verifying OTP:", error);
-//     res.status(500).json({ message: "Error verifying OTP", error: error.message });
-//   }
-// };
+  try {
+    const donor = await prisma.donor.findUnique({ where: { email } });
 
-// exports.addDonorDetails = async (req, res) => {
-//   const { donorId, name, address, city, state, pincode, phone, donorType, photo, restaurantName } = req.body;
+    if (!donor || donor.otp !== otp || new Date() > donor.otpExpiry) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
 
-//   if (!donorId) {
-//     return res.status(400).json({ success: false, message: "Donor ID is required" });
-//   }
+    await prisma.donor.update({
+      where: { email },
+      data: { isVerified: true, otp: null, otpExpiry: null },
+    });
 
-//   try {
-//     let uploadedPhoto = null;
+    res.status(200).json({ success: true, message: "OTP verified", donor });
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    res.status(500).json({ message: "Error verifying OTP", error: error.message });
+  }
+};
 
-//     if (photo && photo.startsWith("data:image")) {
-//       const uploadResponse = await cloudinary.uploader.upload(photo, { folder: "donor_photos", resource_type: "image" });
-//       uploadedPhoto = uploadResponse.secure_url;
-//     }
+exports.addDonorDetails = async (req, res) => {
+  const { donorId, name, address, city, state, pincode, phone, donorType, photo, restaurantName } = req.body;
 
-//     const donor = await prisma.donor.update({
-//       where: { id: donorId },
-//       data: {
-//         name,
-//         address,
-//         city,
-//         state,
-//         pincode,
-//         phone,
-//         donorType,
-//         photo: uploadedPhoto || null,
-//         restaurantName: donorType === "RESTAURANT" ? restaurantName : null,
-//       },
-//     });
+  if (!donorId) {
+    return res.status(400).json({ success: false, message: "Donor ID is required" });
+  }
 
-//     res.status(200).json({ success: true, message: "Donor details added successfully", donor });
-//   } catch (error) {
-//     console.error("Backend Error:", error);
-//     res.status(500).json({ success: false, message: "Error adding donor details", error: error.message });
-//   }
-// };
+  try {
+    let uploadedPhoto = null;
 
-// exports.addFood = async (req, res) => {
-//   try {
-//     const { foodType, foodCategory, noOfDishes, preparationDate, expiryDate, address, latitude, longitude, city } = req.body;
-//     const donorId = req.user.userId;
+    if (photo && photo.startsWith("data:image")) {
+      const uploadResponse = await cloudinary.uploader.upload(photo, { folder: "donor_photos", resource_type: "image" });
+      uploadedPhoto = uploadResponse.secure_url;
+    }
 
-//     if (!foodType || !foodCategory || !noOfDishes || !preparationDate || !expiryDate || !address) {
-//       return res.status(400).json({ success: false, message: "Please fill all the required fields." });
-//     }
+    const donor = await prisma.donor.update({
+      where: { id: donorId },
+      data: {
+        name,
+        address,
+        city,
+        state,
+        pincode,
+        phone,
+        donorType,
+        photo: uploadedPhoto || null,
+        restaurantName: donorType === "RESTAURANT" ? restaurantName : null,
+      },
+    });
 
-//     const foodDetails = await prisma.foodDetails.create({
-//       data: {
-//         donorId,
-//         foodType,
-//         foodCategory,
-//         address,
-//         latitude,
-//         longitude,
-//         city,
-//         noOfDishes: parseInt(noOfDishes),
-//         preparationDate: new Date(preparationDate),
-//         expiryDate: new Date(expiryDate),
-//         status: "available",
-//       },
-//     });
+    res.status(200).json({ success: true, message: "Donor details added successfully", donor });
+  } catch (error) {
+    console.error("Backend Error:", error);
+    res.status(500).json({ success: false, message: "Error adding donor details", error: error.message });
+  }
+};
 
-//     if (global.io) {
-//       global.io.emit("newFoodDonation", { type: "NEW_FOOD_DONATION", foodDetails });
-//     }
+exports.authenticate = (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-//     res.status(201).json({ success: true, message: "Food details added successfully.", foodDetails });
-//   } catch (error) {
-//     console.error("❌ Error adding food details:", error.message);
-//     res.status(500).json({ success: false, message: "Internal server error." });
-//   }
-// };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
 
-// exports.getApprovedNGOs = async (req, res) => {
-//   try {
-//     const ngos = await prisma.nGO.findMany({
-//       where: { isApproved: true },
-//       select: {
-//         id: true,
-//         name: true,
-//         address: true,
-//         email: true,
-//         phoneNumber: true,
-//         city: true,
-//         pincode: true,
-//       },
-//     });
 
-//     res.status(200).json({ success: true, ngos });
-//   } catch (error) {
-//     console.error("Error fetching NGOs:", error.message);
-//     res.status(500).json({ success: false, message: "Internal server error." });
-//   }
-// };
+exports.Login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    console.log("hi");
+    const donor = await prisma.donor.findUnique({ where: { email } });
+
+
+    console.log("Stored password:", donor.password);
+
+    if (!donor) return res.status(404).json({ message: "Donor not found" });
+
+    const isMatch = await bcrypt.compare(password, donor.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ userId: donor.id.toString() }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    res.status(200).json({ success: true, token, donor });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging in", error: error.message });
+  }
+};
+
+
+
+exports.addFood = async (req, res) => {
+  try {
+    const { foodType, foodCategory, noOfDishes, preparationDate, expiryDate, address, latitude, longitude, city } = req.body;
+    const donorId = req.user.userId;
+
+    if (!foodType || !foodCategory || !noOfDishes || !preparationDate || !expiryDate || !address) {
+      return res.status(400).json({ success: false, message: "Please fill all the required fields." });
+    }
+
+    const foodDetails = await prisma.foodDetails.create({
+      data: {
+        donorId,
+        foodType,
+        foodCategory,
+        address,
+        latitude,
+        longitude,
+        city,
+        noOfDishes: parseInt(noOfDishes),
+        preparationDate: new Date(preparationDate),
+        expiryDate: new Date(expiryDate),
+        status: "available",
+      },
+    });
+
+    if (global.io) {
+      global.io.emit("newFoodDonation", { type: "NEW_FOOD_DONATION", foodDetails });
+    }
+
+    res.status(201).json({ success: true, message: "Food details added successfully.", foodDetails });
+  } catch (error) {
+    console.error("❌ Error adding food details:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
+
+exports.getApprovedNGOs = async (req, res) => {
+  try {
+    const ngos = await prisma.nGO.findMany({
+      where: { isApproved: true },
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        email: true,
+        phoneNumber: true,
+        city: true,
+        pincode: true,
+      },
+    });
+
+    res.status(200).json({ success: true, ngos });
+  } catch (error) {
+    console.error("Error fetching NGOs:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
 
 exports.authenticate = (req, res, next) => {
   try {
@@ -212,28 +275,107 @@ exports.Login = async (req, res) => {
   }
 };
 
-exports.getDonorFood = async (req, res) => {
-  try {
-    const donorId = req.user.userId;
+exports.addDonorDetails = async (req, res) => {
+  const { donorId, name, address, city, state, pincode, phone, donorType, photo, restaurantName } = req.body;
 
-    const foods = await prisma.foodDetails.findMany({
-      where: { donorId },
+  if (!donorId) {
+    return res.status(400).json({ success: false, message: "Donor ID is required" });
+  }
+
+  try {
+    let uploadedPhoto = null;
+
+    if (photo && photo.startsWith("data:image")) {
+      const uploadResponse = await cloudinary.uploader.upload(photo, { folder: "donor_photos", resource_type: "image" });
+      uploadedPhoto = uploadResponse.secure_url;
+    }
+
+    const donor = await prisma.donor.update({
+      where: { id: donorId },
+      data: {
+        name,
+        address,
+        city,
+        state,
+        pincode,
+        phone,
+        donorType,
+        photo: uploadedPhoto || null,
+        restaurantName: donorType === "RESTAURANT" ? restaurantName : null,
+      },
     });
 
-    res.status(200).json({ success: true, foods });
+    res.status(200).json({ success: true, message: "Donor details added successfully", donor });
   } catch (error) {
-    console.error("Error fetching donor food:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Backend Error:", error);
+    res.status(500).json({ success: false, message: "Error adding donor details", error: error.message });
   }
 };
 
-exports.getDonorDetails = async (req, res) => {
+exports.authenticate = (req, res, next) => {
   try {
-    const donorId = req.user.userId;
-    const donor = await prisma.donor.findUnique({ where: { id: donorId } });
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    if (!donor) {
-      return res.status(404).json({ message: "Donor not found" });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+
+exports.Login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const donor = await prisma.donor.findUnique({ where: { email } });
+
+
+    console.log("Stored password:", donor?.password);
+
+    if (!donor) return res.status(404).json({ message: "Donor not found" });
+
+    const isMatch = await bcrypt.compare(password, donor.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ userId: donor.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    res.status(200).json({ success: true, token, donor });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging in", error: error.message });
+  }
+};
+
+
+
+exports.addFood = async (req, res) => {
+  try {
+    const { foodType, foodCategory, noOfDishes, preparationDate, expiryDate, address, latitude, longitude, city } = req.body;
+    const donorId = req.user.userId;
+
+    if (!foodType || !foodCategory || !noOfDishes || !preparationDate || !expiryDate || !address) {
+      return res.status(400).json({ success: false, message: "Please fill all the required fields." });
+    }
+
+    const foodDetails = await prisma.foodDetails.create({
+      data: {
+        donorId,
+        foodType,
+        foodCategory,
+        address,
+        latitude,
+        longitude,
+        city,
+        noOfDishes: parseInt(noOfDishes),
+        preparationDate: new Date(preparationDate),
+        expiryDate: new Date(expiryDate),
+        status: "available",
+      },
+    });
+
+    if (global.io) {
+      global.io.emit("newFoodDonation", { type: "NEW_FOOD_DONATION", foodDetails });
     }
 
     res.status(200).json({ success: true, donor });
