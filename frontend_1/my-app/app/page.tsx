@@ -111,10 +111,12 @@ export default function HomePage() {
               Map View
             </Button>
           </Link>
+          <Link href="/add-donation" passHref>
           <Button size="sm" className="h-9">
             <Plus className="mr-2 h-4 w-4" />
             Add Donation
           </Button>
+          </Link>
         </div>
       </div>
 

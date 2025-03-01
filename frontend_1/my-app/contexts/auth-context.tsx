@@ -97,37 +97,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   //   localStorage.setItem("user", JSON.stringify(mockUser))
   // }
 
-  const signup = async (email: string, password: string, name: string, role: UserRole) => {
-    try {
-      setIsLoading(true)
-      // In a real app, this would be an API call to your auth backend
-      // For demo purposes, we'll simulate a successful registration
+  // const signup = async (email: string, password: string, name: string, role: UserRole) => {
+  //   try {
+  //     setIsLoading(true)
+  //     // In a real app, this would be an API call to your auth backend
+  //     // For demo purposes, we'll simulate a successful registration
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500))
+  //     // Simulate API delay
+  //     await new Promise(resolve => setTimeout(resolve, 500))
       
-      const userData: User = {
-        id: "user-" + Date.now(),
-        name,
-        email,
-        role
-      }
+  //     const userData: User = {
+  //       id: "user-" + Date.now(),
+  //       name,
+  //       email,
+  //       role
+  //     }
       
-      // Save user to localStorage
-      localStorage.setItem("user", JSON.stringify(userData))
+  //     // Save user to localStorage
+  //     localStorage.setItem("user", JSON.stringify(userData))
       
-      // Update state
-      setUser(userData)
+  //     // Update state
+  //     setUser(userData)
       
-      // Redirect to dashboard
-      router.push("/")
-    } catch (error) {
-      console.error("Signup failed:", error)
-      throw error
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  //     // Redirect to dashboard
+  //     router.push("/")
+  //   } catch (error) {
+  //     console.error("Signup failed:", error)
+  //     throw error
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
   const signup = async (email: string, password: string, name: string, role: "ngo" | "donor") => {
     try {
       const response = await fetch("/api/donor/register", {

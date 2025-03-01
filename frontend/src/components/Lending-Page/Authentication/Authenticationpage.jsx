@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:5000");
+const socket = io("http://localhost:3001");
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -46,7 +46,7 @@ const AuthPage = () => {
       if (!isLogin) {
         // Registration
         response = await axios.post(
-          "http://localhost:5000/api/donors/register",
+          "http://localhost:3001/api/donors/register",
           {
             name: formData.name,
             email: formData.email,
@@ -59,7 +59,7 @@ const AuthPage = () => {
       } else {
         // Login
         const response = await axios.post(
-          "http://localhost:5000/api/donors/login",
+          "http://localhost:3001/api/donors/login",
           { email: formData.email, password: formData.password },
           { withCredentials: true }
         );

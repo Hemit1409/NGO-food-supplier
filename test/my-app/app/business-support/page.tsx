@@ -5,7 +5,7 @@ import { Building, Users, DollarSign } from "lucide-react"
 
 export default function BusinessSupport() {
   const businesses = [
-    { id: 1, name: "Local Bakery", type: "Food Producer", supporters: 50, raised: 5000 },
+    { id: 1, name: "Local Bakery", type: "Food Producer", supporters: 50, raised: 3001 },
     { id: 2, name: "Community Farm", type: "Agriculture", supporters: 75, raised: 7500 },
     { id: 3, name: "Neighborhood Cafe", type: "Restaurant", supporters: 30, raised: 3000 },
   ]

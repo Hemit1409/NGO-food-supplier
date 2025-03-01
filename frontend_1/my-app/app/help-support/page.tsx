@@ -15,7 +15,7 @@ export default function HelpSupport() {
     },
     {
       question: "How do I add a donation?",
-      answer: "To add a donation, go to the 'Add Donation' page from the sidebar. Fill in the required details such as the type of food, quantity, and pick-up location. Once submitted, your donation will be listed for NGOs to view."
+      answer: "To add a donation, go to the 'tion' page from the sidebar. Fill in the required details such as the type of food, quantity, and pick-up location. Once submitted, your donation will be listed for NGOs to view."
     },
     {
       question: "How can I contact support?",
