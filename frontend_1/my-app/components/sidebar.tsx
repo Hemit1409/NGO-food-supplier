@@ -99,7 +99,7 @@ export function Sidebar({ className }: SidebarProps) {
                 className="w-full justify-start"
                 asChild
               >
-                <Link href="/donations">
+                <Link href="/all-donations">
                   <Heart className="mr-2 h-4 w-4" />
                   Donations (Food listing)
                 </Link>

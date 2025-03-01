@@ -1,53 +1,99 @@
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+// import mongoose from "mongoose";
+// const { Schema } = mongoose;
+
+// const donationSchema = new mongoose.Schema({
+//   donor: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: "User",
+//     required: true,
+//   },
+//   Title :{
+//     type : String,
+//     required : true
+//   },
+//   Category:{
+//     type : String,
+//     enum : ["Perishable" , "Non-Perishable" , "Cooked" , "Raw Ingredient" , "Bakery" , "Dairy"],
+//   },
+//   Description:{
+//     type : String,
+//     required : true
+//   },
+//   quantity: {
+//     type: Number,
+//     required: true,
+//   },
+//   Pickuplocation: {
+//     type: String,
+//     required: true,
+//   },
+//   status: {
+//     type: String,
+//     enum: ["AVAILABLE", "PICKED_UP", "DELIVERED","REPORTED","DISTRIBUTED"],
+//     default: "AVAILABLE",
+//   },
+//   foodVerification:{
+//     type : String,
+//     enum : ["VERIFIED","NOT VERIFIED"]
+//   },
+//   expiryDate:{
+//     type : Date,
+//     required : true
+//   },
+//   photos:{
+//     type:String
+//   },
+//   createdAt: {
+//     type: Date,
+//     default: Date.now,
+//   },
+//   pickupTime: Date,
+// });
+
+// export default mongoose.model("Donation", donationSchema);
+// models/foodDonation.model.js
+import mongoose from 'mongoose';
 
 const donationSchema = new mongoose.Schema({
-  donor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
+  title: {
+    type: String,
+    required: [true, 'Title is required']
   },
-  Title :{
-    type : String,
-    required : true
+  category: {
+    type: String,
+    required: [true, 'Category is required'],
+    enum: ['perishable', 'non-perishable', 'cooked', 'raw', 'bakery', 'dairy']
   },
-  Category:{
-    type : String,
-    enum : ["Perishable" , "Non-Perishable" , "Cooked" , "Raw Ingredient" , "Bakery" , "Dairy"],
-  },
-  Description:{
-    type : String,
-    required : true
+  description: {
+    type: String,
+    required: [true, 'Description is required']
   },
   quantity: {
-    type: Number,
-    required: true,
-  },
-  Pickuplocation: {
     type: String,
-    required: true,
+    required: [true, 'Quantity is required']
   },
-  status: {
+  expiryDate: {
+    type: Date
+  },
+  pickupLocation: {
     type: String,
-    enum: ["AVAILABLE", "PICKED_UP", "DELIVERED","REPORTED","DISTRIBUTED"],
-    default: "AVAILABLE",
+    required: [true, 'Pickup location is required']
   },
-  foodVerification:{
-    type : String,
-    enum : ["VERIFIED","NOT VERIFIED"]
+  availableUntil: {
+    type: Date,
+    required: [true, 'Available until date/time is required']
   },
-  expiryDate:{
-    type : Date,
-    required : true
+  pickupNotes: {
+    type: String
   },
-  photos:{
-    type:String
-  },
+  // You can add more fields like createdBy (user reference), status, etc.
   createdAt: {
     type: Date,
-    default: Date.now,
-  },
-  pickupTime: Date,
+    default: Date.now
+  }
 });
 
-export default mongoose.model("Donation", donationSchema);
+// Check if model is already defined (for hot reloading)
+const Donation = mongoose.models.Donation || mongoose.model('Donation', donationSchema);
+
+export default Donation;
