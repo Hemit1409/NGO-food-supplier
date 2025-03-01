@@ -110,22 +110,22 @@ exports.verifyOTP = async (req, res) => {
 };
 
 exports.addDonorDetails = async (req, res) => {
-  const { donorId, name, address, city, state, pincode, phone, donorType, photo, restaurantName } = req.body;
-
-  if (!donorId) {
+  const { name, address, city, state, pincode, phone, donorType, photo, restaurantName } = req.body;
+  email1 = "hemitrana2@gmail.com"
+  if (!email) {
     return res.status(400).json({ success: false, message: "Donor ID is required" });
   }
 
   try {
     let uploadedPhoto = null;
 
-    if (photo && photo.startsWith("data:image")) {
-      const uploadResponse = await cloudinary.uploader.upload(photo, { folder: "donor_photos", resource_type: "image" });
-      uploadedPhoto = uploadResponse.secure_url;
-    }
+    // if (photo && photo.startsWith("data:image")) {
+    //   const uploadResponse = await cloudinary.uploader.upload(photo, { folder: "donor_photos", resource_type: "image" });
+    //   uploadedPhoto = uploadResponse.secure_url;
+    // }
 
     const donor = await prisma.donor.update({
-      where: { id: donorId },
+      where: { email: email1 },
       data: {
         name,
         address,
@@ -276,22 +276,22 @@ exports.Login = async (req, res) => {
 };
 
 exports.addDonorDetails = async (req, res) => {
-  const { donorId, name, address, city, state, pincode, phone, donorType, photo, restaurantName } = req.body;
-
-  if (!donorId) {
+  const { name, address, city, state, pincode, phone, donorType, photo, restaurantName } = req.body;
+  email1 = "hemitrana2@gmail.com"
+  if (!email1) {
     return res.status(400).json({ success: false, message: "Donor ID is required" });
   }
 
   try {
     let uploadedPhoto = null;
 
-    if (photo && photo.startsWith("data:image")) {
-      const uploadResponse = await cloudinary.uploader.upload(photo, { folder: "donor_photos", resource_type: "image" });
-      uploadedPhoto = uploadResponse.secure_url;
-    }
+    // if (photo && photo.startsWith("data:image")) {
+    //   const uploadResponse = await cloudinary.uploader.upload(photo, { folder: "donor_photos", resource_type: "image" });
+    //   uploadedPhoto = uploadResponse.secure_url;
+    // }
 
     const donor = await prisma.donor.update({
-      where: { id: donorId },
+      where: { email: email1 },
       data: {
         name,
         address,

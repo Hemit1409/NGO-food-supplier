@@ -68,17 +68,19 @@ const AuthPage = () => {
           console.log(response.data.data);
         }
 
-        navigate("/user-dashboard");
-        console.log(response.data.data);
-        if (response.data.success) {
-          const userId = response.data.data.id;
-          // if (userId) {
-          //   socket.emit("userConnected", userId);
-          // }
-          console.log(response.data.data);
-        }
+        // navigate("/user-dashboard");
+        // console.log(response.data.data);
+        // if (response.data.success) {
+        //   const userId = response.data.data.id;
+        //   // if (userId) {
+        //   //   socket.emit("userConnected", userId);
+        //   // }
+        //   console.log(response.data.data);
+        // }
 
-        navigate("/user-dashboard",{state: { userId: response.data.data.id } });;
+        //navigate("/user-dashboard",{state: { userId: response.data.data.id } });
+        navigate("/user-dashboard", { state: { userId: "67c2f2767874553f3663e403" } });
+
       }
     } catch (err) {
       console.error("Auth error:", err.response?.data || err.message);
