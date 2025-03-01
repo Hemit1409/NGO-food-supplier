@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label"
 import axios from "axios";
 
 export default function Signup() {
-  const [name, setName] = useState("")
+  const [username, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [role, setRole] = useState<"ngo" | "donor">("donor")
@@ -25,15 +25,21 @@ export default function Signup() {
     const requestBody = {
       email,
       password,
-      name,
-      role
+      username,
+      role,
+      "address": "456 NGO Street",
+      "city": "City2",
+      "pincode": "654321",
+      "certificate": "certificate.pdf",
+      "isApproved": false,
+      "phone": "9876543210"
     }
   
     console.log("Request Body:", requestBody)
     const response = await axios.post("http://localhost:5000/api/donor/register", requestBody);
 
     try {
-      await signup(email, password, name, role)
+      //await signup(email, password, username, role)
       if(role == "donor"){router.push("/verify-otp")} else if(role == "ngo"){router.push("/")}
     } catch (error) {
       console.error("Signup failed:", error)
@@ -51,7 +57,7 @@ export default function Signup() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-sm font-medium">Name</label>
-              <Input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+              <Input type="text" value={username} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div>
               <label className="text-sm font-medium">Email</label>
