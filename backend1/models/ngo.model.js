@@ -16,6 +16,22 @@ const ngoSchema = new Schema({
     type: String,
     required: true,
   },
+  address:{
+    type:String,
+    required:true
+  },
+  city:{
+    type:String,
+  },
+  pincode:{
+    type:String
+  },
+  certificate:{
+    type:String
+  },
+  isApproved:{
+    type:Boolean,
+  },
   mobileNumber: {
     type: String,
     required: true,

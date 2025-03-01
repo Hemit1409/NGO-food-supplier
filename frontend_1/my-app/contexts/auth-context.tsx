@@ -85,6 +85,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  // const signup = async (email: string, password: string, name: string, role: "ngo" | "donor") => {
+  //   // Simulate API call
+  //   const mockUser = {
+  //     id: "1",
+  //     name,
+  //     email,
+  //     role,
+  //   }
+  //   setUser(mockUser)
+  //   localStorage.setItem("user", JSON.stringify(mockUser))
+  // }
+
   const signup = async (email: string, password: string, name: string, role: UserRole) => {
     try {
       setIsLoading(true)
@@ -116,6 +128,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(false)
     }
   }
+  const signup = async (email: string, password: string, name: string, role: "ngo" | "donor") => {
+    try {
+      const response = await fetch("/api/donor/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, name }),
+        credentials: "include",
+      })
+  
+      if (!response.ok) {
+        throw new Error("Signup failed")
+      }
+  
+      const user = await response.json()
+      setUser(user)
+      localStorage.setItem("user", JSON.stringify(user))
+    } catch (error) {
+      console.error("Signup error:", error)
+    }
+  }
+
+
 
   const logout = () => {
     // Remove user from localStorage

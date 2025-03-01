@@ -32,7 +32,7 @@ export default function Signup() {
 
     try {
       await signup(email, password, name, role)
-      // Redirect is handled in the auth context
+      if(role == "donor"){router.push("/verify-otp")} else if(role == "ngo"){router.push("/")}
     } catch (error) {
       console.error("Signup failed:", error)
     }
