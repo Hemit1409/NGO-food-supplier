@@ -61,9 +61,9 @@ const donorSchema = new Schema({
   pincode:{
       type : String
   },
-  // otpExpiry:{
-  //   type : timestamps
-  // },
+  otpExpiry: {
+    type: Date,
+  },
   phone: {
     type: String,
     required: true,

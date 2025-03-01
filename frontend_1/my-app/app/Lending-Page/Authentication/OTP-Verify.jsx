@@ -1,8 +1,6 @@
-"use client";
-
 import React, { useState, useEffect, useRef } from "react";
-import { Building } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Building, Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const OTPVerify = () => {
@@ -10,7 +8,7 @@ const OTPVerify = () => {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRefs = useRef([...Array(6)].map(() => React.createRef()));
-  const router = useRouter();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const countdown =
@@ -41,9 +39,9 @@ const OTPVerify = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/donor/verify-otp",
+        "http://localhost:5000/api/donors/verify-otp",
         {
-          email: "hemitrana2@gmail.com",
+          email: localStorage.getItem("email"),
           otp: otp.join(""),
         }
       );
@@ -52,10 +50,9 @@ const OTPVerify = () => {
 
       if (response.data.success) {
         console.log("OTP Verified Successfully!");
-        // router.push("/profile", {
-        //   state: { donorId: response.data.donor.id },
-        // });
-        router.push("/profile")
+        navigate("/donor-registration", {
+          state: { donorId: response.data.donor.id },
+        });
       } else {
         alert(response.data.message || "Invalid OTP! Please try again.");
       }
@@ -70,8 +67,8 @@ const OTPVerify = () => {
   };
 
   const resendOTP = () => {
+    // setTimer(15);
     setOtp(Array(6).fill(""));
-    setTimer(60); // Reset the timer
   };
 
   return (
@@ -104,19 +101,36 @@ const OTPVerify = () => {
               ))}
             </div>
 
+            <div className="text-center">
+              {timer > 0 ? (
+                <p className="text-gray-600">
+                  Resend code in <span className="font-bold">15 min</span>
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={resendOTP}
+                  className="text-[#8beb7f] hover:text-[#78d86e]"
+                >
+                  Resend OTP
+                </button>
+              )}
+            </div>
+
             <button
               type="submit"
               disabled={otp.includes("") || isSubmitting}
-              className={`w-full py-3 rounded-xl transition-all duration-300 transform border-2 ${
+              onClick={isSubmitting}
+              className={`w-full py-3 rounded-xl transition-all duration-300 transform ${
                 !otp.includes("") && !isSubmitting
-                  ? "border-light-green-500 text-light-green-500 hover:bg-light-green-100 hover:scale-[1.02] hover:shadow-lg"
-                  : "border-gray-300 text-gray-300 cursor-not-allowed"
-              } font-medium`}
+                  ? "bg-[#8beb7f] hover:bg-[#78d86e] hover:scale-[1.02] hover:shadow-lg"
+                  : "bg-gray-300 cursor-not-allowed"
+              } text-white font-medium`}
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5"
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -141,22 +155,6 @@ const OTPVerify = () => {
                 "Verify OTP"
               )}
             </button>
-
-            <div className="text-center">
-              {timer > 0 ? (
-                <p className="text-gray-600">
-                  Resend code in <span className="font-bold">{timer} seconds</span>
-                </p>
-              ) : (
-                <button
-                  type="button"
-                  onClick={resendOTP}
-                  className="text-[#8beb7f] hover:text-[#78d86e]"
-                >
-                  Resend OTP
-                </button>
-              )}
-            </div>
           </form>
         </div>
       </div>

@@ -130,7 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // }
   const signup = async (email: string, password: string, name: string, role: "ngo" | "donor") => {
     try {
-      const response = await fetch("/api/donor/register", {
+      const response = await fetch("http://localhost:5000/api/donor/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
