@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
+import axios from "axios";
 
 export default function Signup() {
   const [name, setName] = useState("")
@@ -29,6 +30,7 @@ export default function Signup() {
     }
   
     console.log("Request Body:", requestBody)
+    const response = await axios.post("http://localhost:5000/api/donor/register", requestBody);
 
     try {
       await signup(email, password, name, role)
