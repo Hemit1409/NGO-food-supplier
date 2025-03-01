@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+//import MapComponent from "./components/MapComponent";
 
 export default function CategoriesPage() {
   // Mock data for demonstration
@@ -84,7 +85,7 @@ export default function CategoriesPage() {
               {/* Map will go here */}
               <div className="grid h-full place-items-center">
                 <p className="text-muted-foreground">Map View Coming Soon</p>
-                
+                {/* <MapComponent /> */}
               </div>
             </div>
             <p className="text-sm text-muted-foreground">Find donations near you using our interactive map</p>

@@ -116,10 +116,10 @@ export const register = async (req, res) => {
 
 export const verifyOTP = async (req, res) => {
   const { email, otp } = req.body;
-  console.log(email);
+  email="hemitrana2@gmail.com"
   try {
     // Find the donor by email
-    const donor = await Donor.findOne({ email });
+    const donor = await Donor.findOne({email});
     //console.log(donor.otp);
     if (!donor || donor.otp !== otp ){//|| new Date() > donor.otpExpiry) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
