@@ -408,40 +408,6 @@ export default function ProfilePage() {
           </Tabs>
 
           <div className="mt-8 space-y-2">
-            <Link
-              href="/account-settings"
-              className="flex items-center justify-between rounded-lg border p-4 hover:bg-accent"
-            >
-              <div className="flex items-center gap-3">
-                <Settings className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">Account Settings</span>
-              </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
-            </Link>
-            <Link
-              href="/payment-methods"
-              className="flex items-center justify-between rounded-lg border p-4 hover:bg-accent"
-            >
-              <div className="flex items-center gap-3">
-                <CreditCard className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">Payment Methods</span>
-              </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
-            </Link>
-            <Link href="/support" className="flex items-center justify-between rounded-lg border p-4 hover:bg-accent">
-              <div className="flex items-center gap-3">
-                <HelpCircle className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">Help & Support</span>
-              </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
-            </Link>
-            <Link href="/messages" className="flex items-center justify-between rounded-lg border p-4 hover:bg-accent">
-              <div className="flex items-center gap-3">
-                <MessageSquare className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">Messages</span>
-              </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
-            </Link>
             <Button variant="destructive" className="mt-4 w-full gap-2">
               <LogOut className="h-4 w-4" />
               <span>Log Out</span>
