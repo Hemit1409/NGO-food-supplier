@@ -22,12 +22,13 @@
 // export default router;
 
 import express from "express";
-import { register, signin, logout } from "../controllers/donorController.js";
+import { register, signin, logout, verifyOTP} from "../controllers/donorController.js";
 
 const router = express.Router();
 
 router.post("/register", register);
 router.post("/signin", signin);
 router.post("/logout", logout);
+router.post("/verify-otp", verifyOTP);
 
 export default router;
