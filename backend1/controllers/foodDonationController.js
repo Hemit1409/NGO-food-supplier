@@ -1,44 +1,30 @@
 import Donation from '../models/foodDonation.model.js';
 
-// @desc    Create a new donation
-// @route   POST /api/donor/add-donation
-// @access  Public
+// Create Donation
 export const createDonation = async (req, res) => {
   try {
-    const newDonation = await Donation.create(req.body);
-    await newDonation.populate('donor');
-    res.status(201).json({
-      success: true,
-      message: 'Donation created successfully',
-      donation: newDonation,
-    });
+    const donation = new Donation(req.body);
+    await donation.save();
+    res.status(201).json({ success: true, message: 'Donation added', donation });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Get all donations
-// @route   GET /api/donor/get-donations
-// @access  Public
+// Get All Donations
 export const getDonations = async (req, res) => {
   try {
-    const donations = await Donation.find().populate('donor');
-    res.status(200).json({
-      success: true,
-      message: 'Donations fetched successfully',
-      donations,
-    });
+    const donations = await Donation.find();
+    res.status(200).json({ success: true, donations });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Get donation by ID
-// @route   GET /api/donor/get-donation/:id
-// @access  Public
+// Get Donation by ID
 export const getDonationById = async (req, res) => {
   try {
-    const donation = await Donation.findById(req.params.id).populate('donor');
+    const donation = await Donation.findById(req.params.id);
     if (!donation) {
       return res.status(404).json({ success: false, message: 'Donation not found' });
     }
@@ -48,37 +34,28 @@ export const getDonationById = async (req, res) => {
   }
 };
 
-// @desc    Update donation by ID
-// @route   PUT /api/donor/update-donation/:id
-// @access  Public
+// Update Donation
 export const updateDonation = async (req, res) => {
   try {
-    const updatedDonation = await Donation.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('donor');
-    if (!updatedDonation) {
+    const donation = await Donation.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!donation) {
       return res.status(404).json({ success: false, message: 'Donation not found' });
     }
-    res.status(200).json({
-      success: true,
-      message: 'Donation updated successfully',
-      donation: updatedDonation,
-    });
+    res.status(200).json({ success: true, message: 'Donation updated', donation });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Delete donation by ID
-// @route   DELETE /api/donor/delete-donation/:id
-// @access  Public
+// Delete Donation
 export const deleteDonation = async (req, res) => {
   try {
     const donation = await Donation.findById(req.params.id);
     if (!donation) {
       return res.status(404).json({ success: false, message: 'Donation not found' });
     }
-
     await donation.deleteOne();
-    res.status(200).json({ success: true, message: 'Donation deleted successfully' });
+    res.status(200).json({ success: true, message: 'Donation deleted' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
