@@ -22,9 +22,19 @@ export default function Signup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const requestBody = {
+      email,
+      password,
+      name,
+      role
+    }
+  
+    console.log("Request Body:", requestBody) // ✅ Log the body before sending
+
     try {
       await signup(email, password, name, role)
-      router.push("/dashboard")
+      if(role === "donor"){router.push("/")} else if(role === "ngo"){router.push("/")}
     } catch (error) {
       console.error("Signup failed:", error)
     }
@@ -55,8 +65,8 @@ export default function Signup() {
               <label className="text-sm font-medium block mb-2">I am a:</label>
               <RadioGroup value={role} onValueChange={(value: "ngo" | "donor") => setRole(value)}>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="donor" id="donor" />
-                  <Label htmlFor="donor">Food Supplier</Label>
+                  <RadioGroupItem value="Donor" id="donor" />
+                  <Label htmlFor="Donor">Food Supplier</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="ngo" id="ngo" />
@@ -79,4 +89,3 @@ export default function Signup() {
     </div>
   )
 }
-
