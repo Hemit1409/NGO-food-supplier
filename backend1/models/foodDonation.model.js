@@ -7,15 +7,23 @@ const donationSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  foodType: {
-    type: String,
-    required: true,
+  Title :{
+    type : String,
+    required : true
+  },
+  Category:{
+    type : String,
+    enum : ["Perishable" , "Non-Perishable" , "Cooked" , "Raw Ingredient" , "Bakery" , "Dairy"],
+  },
+  Description:{
+    type : String,
+    required : true
   },
   quantity: {
     type: Number,
     required: true,
   },
-  location: {
+  Pickuplocation: {
     type: String,
     required: true,
   },
@@ -31,6 +39,9 @@ const donationSchema = new mongoose.Schema({
   expiryDate:{
     type : Date,
     required : true
+  },
+  photos:{
+    type:String
   },
   createdAt: {
     type: Date,
