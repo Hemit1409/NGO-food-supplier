@@ -68,14 +68,14 @@ export default function NGODetails() {
     <div className="pb-8">
       <div className="relative h-64 bg-gray-200">
         <img
-          src={ngo.coverImage || "/placeholder.svg"}
+          src={ngo.coverImage || "df.jpg"}
           alt={`${ngo.name} cover`}
           className="w-full h-full object-cover"
         />
         <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-black/50 to-transparent"></div>
         <div className="absolute bottom-4 left-6 flex items-center">
           <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white">
-            <img src={ngo.logo || "/placeholder.svg"} alt={ngo.name} className="w-full h-full object-cover" />
+            <img src={ngo.logo || "df.jpg"} alt={ngo.name} className="w-full h-full object-cover" />
           </div>
           <div className="ml-4 text-white">
             <h1 className="text-2xl font-bold">{ngo.name}</h1>
