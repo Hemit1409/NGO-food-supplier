@@ -1,22 +1,29 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Import router for navigation
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 export default function WelcomeModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasCheckedStorage, setHasCheckedStorage] = useState(false); // Ensure hydration check
   const router = useRouter();
 
   useEffect(() => {
-    // Check if modal has been shown before
-    const hasSeenModal = localStorage.getItem("hasSeenWelcomeModal");
+    if (typeof window !== "undefined") {
+      // Avoid SSR issues by checking only in client-side
+      const userLoggedIn = localStorage.getItem("isLoggedIn");
+      const hasSeenModal = localStorage.getItem("hasSeenWelcomeModal");
 
-    // Show modal only if it hasn't been shown
-    if (!hasSeenModal) {
-      setIsOpen(true);
-      localStorage.setItem("hasSeenWelcomeModal", "true"); // Store in localStorage
+      setIsLoggedIn(!!userLoggedIn);
+      setHasCheckedStorage(true);
+
+      if (!userLoggedIn && !hasSeenModal) {
+        setIsOpen(true);
+        localStorage.setItem("hasSeenWelcomeModal", "true");
+      }
     }
   }, []);
 
@@ -25,9 +32,12 @@ export default function WelcomeModal() {
     router.push("/sign-in"); // Redirect to sign-in page
   };
 
+  // Prevent flickering if storage hasn't been checked yet
+  if (!hasCheckedStorage) return null;
+
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && !isLoggedIn && (
         <motion.div
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50"
           initial={{ opacity: 0 }}
@@ -54,9 +64,11 @@ export default function WelcomeModal() {
             </p>
             <p className="mt-2 text-gray-500 italic">Together, every meal counts.</p>
             <div className="mt-6">
-              <Link href="/signup"><Button variant="default" className="px-6 py-3 text-lg" onClick={handleGetStarted}>
-                Get Started 🚀
-              </Button></Link>
+              <Link href="/signup">
+                <Button variant="default" className="px-6 py-3 text-lg" onClick={handleGetStarted}>
+                  Get Started 🚀
+                </Button>
+              </Link>
             </div>
           </motion.div>
         </motion.div>
