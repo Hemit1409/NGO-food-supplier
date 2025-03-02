@@ -3,9 +3,9 @@
 video drive link : https://drive.google.com/drive/folders/1ohQ37R1dP5wsI-aqIHgRhb-TF-YxnRNA?usp=sharing
 
 
-# Food Wastage Reduction Portal
+# Food4Good : Food Wastage Reduction Portal
 
-## 🏆 Odoo x Charusat - Social Good & Civic Tech
+##  Odoo x Charusat - Social Good & Civic Tech
 
 ### 🚀 Team: The Hustlers
 - **Hemit Rana (Team Leader)** - MERN Stack, Algorithm Design
