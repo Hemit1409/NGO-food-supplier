@@ -64,7 +64,7 @@ export default function WelcomeModal() {
             </p>
             <p className="mt-2 text-gray-500 italic">Together, every meal counts.</p>
             <div className="mt-6">
-              <Link href="/signin">
+              <Link href="/login">
                 <Button variant="default" className="px-6 py-3 text-lg" onClick={handleGetStarted}>
                   Get Started 🚀
                 </Button>
