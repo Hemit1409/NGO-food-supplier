@@ -193,7 +193,5 @@ This project is licensed under the MIT License.
 
 ---
 
-## 📞 Contact Us
-For any queries, reach out to the team at **your-email@example.com** or visit our GitHub repository.
 
 
