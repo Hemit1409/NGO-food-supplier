@@ -37,9 +37,9 @@
 // export default router;
 // File: /app/api/donations/add-donation/route.js (for App Router)
 // OR: /pages/api/donations/add-donation.js (for Pages Router)
-
-import { createDonation } from '../../../../controllers/foodDonationController';
-
+import express from "express";
+import { createDonation } from '../controllers/foodDonationController.js';
+const router = express.Router();
 // For App Router
 export async function POST(request) {
   try {
@@ -62,6 +62,7 @@ export async function POST(request) {
   }
 }
 
+export default router;
 // For Pages Router (if you're using Pages Router instead of App Router)
 /*
 export default async function handler(req, res) {

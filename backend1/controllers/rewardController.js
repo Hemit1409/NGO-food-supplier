@@ -1,82 +1,49 @@
-<<<<<<< HEAD
-const { Reward, Achievement, UserPoints } = require('../models/rewards');
+import mongoose from "mongoose";
+import Reward from "../models/reward.model.js";
+import User from "../models/donor.model.js"; // Assuming users store points
+import Achievement from "../models/reward.model.js"; // Tracking user achievements
 
-// Allocate points to a user
-const allocatePoints = async (req, res) => {
-  const { userId, points } = req.body;
+// ✅ Allocate Points to User
+export const allocatePoints = async (req, res) => {
   try {
+    const { userId, points } = req.body;
+
     let userPoints = await UserPoints.findOne({ userId });
     if (!userPoints) {
       userPoints = new UserPoints({ userId, points });
     } else {
       userPoints.points += points;
     }
+
     await userPoints.save();
     res.status(200).json({ success: true, points: userPoints.points });
-=======
-import Reward from "../models/rewards.model.js";
-import User from "../models/donor.model.js"; // Assuming users store their points
-import Achievement from "../models/achievements.model.js"; // New model for tracking user achievements
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
-// Create Reward
+// ✅ Create a New Reward
 export const createReward = async (req, res) => {
   try {
     const reward = new Reward(req.body);
     await reward.save();
     res.status(201).json({ success: true, message: "Reward added", reward });
->>>>>>> fefb986f1389c4ce9c57766efb306d50636bc1b6
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-<<<<<<< HEAD
-// Redeem a reward
-const redeemReward = async (req, res) => {
-  const { userId, rewardId } = req.body;
-  try {
-    const reward = await Reward.findById(rewardId);
-    if (!reward) {
-      return res.status(404).json({ success: false, message: 'Reward not found' });
-    }
-
-    const userPoints = await UserPoints.findOne({ userId });
-    if (!userPoints || userPoints.points < reward.points) {
-      return res.status(400).json({ success: false, message: 'Not enough points to redeem this reward' });
-    }
-
-    userPoints.points -= reward.points;
-    await userPoints.save();
-    res.status(200).json({ success: true, message: 'Reward redeemed successfully', points: userPoints.points });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Get user rewards and points
-const getUserRewards = async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const userPoints = await UserPoints.findOne({ userId });
-    const achievements = await Achievement.find({ userId });
-    const rewards = await Reward.find();
-    res.status(200).json({ points: userPoints ? userPoints.points : 0, achievements, rewards });
-=======
-// Get All Rewards
+// ✅ Get All Rewards
 export const getRewards = async (req, res) => {
   try {
     const rewards = await Reward.find();
     res.status(200).json({ success: true, rewards });
->>>>>>> fefb986f1389c4ce9c57766efb306d50636bc1b6
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-<<<<<<< HEAD
-module.exports = { allocatePoints, redeemReward, getUserRewards };
-=======
-// Get Reward by ID
+// ✅ Get Reward by ID
 export const getRewardById = async (req, res) => {
   try {
     const reward = await Reward.findById(req.params.id);
@@ -89,7 +56,7 @@ export const getRewardById = async (req, res) => {
   }
 };
 
-// Redeem Reward (User Uses Points)
+// ✅ Redeem a Reward (User Uses Points)
 export const redeemReward = async (req, res) => {
   try {
     const { userId, rewardId } = req.body;
@@ -115,7 +82,26 @@ export const redeemReward = async (req, res) => {
   }
 };
 
-// Get User Achievements and Points
+// ✅ Get User Rewards & Achievements
+export const getUserRewards = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const userPoints = await UserPoints.findOne({ userId });
+    const achievements = await Achievement.find({ userId });
+    const rewards = await Reward.find();
+
+    res.status(200).json({
+      points: userPoints ? userPoints.points : 0,
+      achievements,
+      rewards,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ✅ Get User Progress (Points & Achievements)
 export const getUserProgress = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -132,4 +118,3 @@ export const getUserProgress = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
->>>>>>> fefb986f1389c4ce9c57766efb306d50636bc1b6
